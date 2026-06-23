@@ -1,0 +1,29 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: ecommerce_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ecommerce_db_docker
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Ray_skate105
+    ports:
+      - "5432:5432"
+    volumes:
+      - ecommerce_postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: ecommerce_app
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ecommerce_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+
+volumes:
+  ecommerce_postgres_data:
